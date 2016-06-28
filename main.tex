@@ -1,0 +1,249 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{latexsym}
+\usepackage{units}
+\usepackage{ amssymb }
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{lem}{Lemma}[section]
+\newtheorem{cor}{Corollary}[section]
+\newtheorem{conj}{Conjecture}[section]
+\newtheorem{exer}{Exercise}[section]
+\newtheorem{fact}{Fact}[section]
+
+\title{Fourier and Hilbert}
+\author{Lecturer: Dr. Bergelson \\
+Notes by: Fil and George}
+\date{Ross Program, Summer 2016}
+
+\begin{document}
+
+\maketitle
+
+\section{Intro to Fourier}
+
+Joseph Fourier lived from 1768 to 1830. One of his most well known achievements was uncovering the parabolic PDE 
+\begin{equation}
+    u_{t} = ku_{xx},
+\end{equation}
+where $k>0$ is a physical constant, and the boundary conditions $u(x,0) = f(x)$ and $u(0,t) = u(\pi, t) = 0$, where $\pi$ is the length of the region being analyzed. This is called the \textit{heat equation}, because it describes heat distribution in a given region over time.
+
+Fourier also discovered the solution set
+\begin{equation}
+    u(x,t) = \sum_{n=1}^{\infty} c_{n} e^{-kn^{2}t}\sin(nx),
+\end{equation}
+where we are searching for "Fourier coefficients" $c_{n}$ so that 
+\begin{equation}
+u(x,0) = \sum_{n=1}^{\infty} c_{n}\sin(nx) = f(x).
+\end{equation}
+The $c_{m}$ are calculated as such:
+\begin{equation}
+c_{m} = \frac{2}{\pi} \int_{0}^{2\pi} f(x)\sin(nx) dx.
+\end{equation}
+
+According to Fourier, "any arbitrary" $f(x)$ has the representation 
+\begin{equation}
+f(x) = \frac{a_{0}}{2} + a_{1}\cos(x) + b_{1}\sin(x) + \ldots + a_{k}\cos(kx) + b_{k}\sin(kx) + \ldots ,
+\end{equation}
+where 
+\begin{equation}
+a_{n} = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x)\cos(nx) dx
+\end{equation}
+and
+\begin{equation}
+b_{n} = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x)\sin(nx) dx.
+\end{equation}
+This is a revolutionary concept which paved the way for more advanced techniques in PDE. It also laid foundations for functional analysis, which, simply put, is linear algebra done on infinite dimensional vector spaces. Our objective will be to formulate a basic knowledge of functional analysis using \textit{Hilbert spaces}. With this, we will be able to tackle interesting problems, including the ones which follow...
+
+\section{Problems}
+
+The most immediate applications of Fourier's expansion might be to problems concerning infinite series. For example, we will look at:
+\begin{equation}
+\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}
+\end{equation}
+and
+\begin{equation}
+\sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n^2} = \frac{\pi^2}{12}.
+\end{equation}
+
+We will also investigate the \textit{Leibnitz formula}:
+\begin{equation}
+\frac{\pi}{4} = 1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + \frac{1}{9} - \ldots
+.\end{equation}
+The above should be solved as an exercise using a well known Taylor expansion. Additionally, we will see how Fourier provided the \textit{Generalized Leibnitz formula}:
+\begin{equation}
+\frac{\pi}{4} = \cos(y) - \frac{1}{3}\cos(3y) + \frac{1}{5}\cos(5y) - \frac{1}{7}\cos(7y) + \ldots,
+\end{equation}
+which converges for all $y \in (\frac{-\pi}{2}, \frac{\pi}{2}).$
+
+Before we state and discuss the \textit{Weierstrass Approximation theorem}, we must first introduce a definition.
+\begin{defn} Given that $f,g \in C[0,1]$, the set of continuous functions on the interval $[0,1]$, the metric we use is 
+\begin{align}
+    d(f,g) := \max_{x \in [0.1]} \vert f(x) - g(x) \vert .
+\end{align}
+\end{defn}
+
+The following exercise are meant to bolster an understanding of this concept before we move onto the theorem. 
+
+\begin{exer}
+
+$d(f,g) = 0$ if and only if $f=g$.
+
+$d(f_{1}, f_{3}) \leq d(f_{1}, f_{2}) + d(f_{2}, f_{3})$, $f_{i} \in C[0,1]$. (This is the \textit{triangle inequality}.)
+
+\end{exer}
+
+\begin{thm}
+Let $f : [0,1] \to \mathbb{R}$ be a continuous function on $[0,1].$ Then for all $\varepsilon > 0$, there exists a polynomial $p(x) \in \mathbb{R}[x]$ so that 
+$$
+d(f,p) < \varepsilon.
+$$
+\end{thm}
+
+This is one of the most famous theorems proven by Weierstrass, and is very similar to the important idea that $\mathbb{Q}$ is dense in $\mathbb{R}$. Indeed, a shorthand way of stating the theorem would be that polynomials are dense in $C[0,1]$. The following notable corollary sets a trend for a pattern we must keep an eye out for throughout our study of Hilbert spaces.
+\begin{cor}
+There exists a countable dense set in $C[0,1]$.
+\end{cor}
+
+For an even more interesting case, consider polynomials with a preselected set of powers of $x$. Let's call this set $\{x^{n_{i}} \}$. This is a central concept in the \textit{M\"{u}ntz-Sz\'{a}sz theorem}:
+
+\begin{thm}
+The Weierstrass approximation theorem holds for $\{x^{n_{i}} \}$ if and only if  $$\sum_{n=1}^{\infty} \frac{1}{n_{i}}$$ diverges.
+\end{thm}
+
+Our techniques from Fourier and Hilbert will also be applied to the interesting and ancient \textit{Dido's problem}: What is the maximal area inside a closed continuous curve of length $L$? The simplicity of the statement of the problem makes it so appetizing, and the fact that we could use techniques from Fourier series to solve it is indeed incredible. But before we jump into the problems listed above, we will need to dust off some concepts, while adding new ones and taking down a few problems along the way...
+
+\section{Convergence, Continuity and Cardinality}
+
+\begin{exer} Prove that these series converge:
+$$\sum_{n=2}^{\infty} \frac{\sin nx}{\log n} \qquad \sum_{n=2}^{\infty} \frac{\cos nx}{\log n}$$
+\end{exer}
+(Also, note that one is a Fourier series and the other is not! Can you tell which one is which?)
+
+After practicing with a few infinite series, consider the following theorem of Riemann as an exercise. First, it is important to note that by a \textit{rearrangement} of a sequence $a_{n}$, we mean a bijection from it to itself.
+\pagebreak
+
+\begin{thm}
+If $\sum a_{n}$ is a conditionally convergent series, then for all $x \in \mathbb{R} \cup \{ -\infty, \infty \}$, there exists a rearrangement of $a_{n}$, call it $b_{n}$, such that $$\sum_{n=1}^{\infty} b_{n} = x.$$
+\end{thm}
+
+Does this work in $\mathbb{R}^d$? Think about the definition of conditionally convergent in the more general case, and see if this theorem can be generalized, too. 
+
+Recall the Fourier expansion
+\begin{equation}
+    f(x) ~ \frac{a_{0}}{2} + \sum_{n=1}^{\infty} (a_{n}\cos nx + b_{n}\sin nx) =: F_{f}(x).
+\end{equation}
+Then there are continuous functions $f$ such that $F_{f}(x)$ is not convergent for many $x$ (try to verify this). 
+
+\begin{exer}
+Any continuous function $f$ on a closed, bounded interval in $\mathbb{R}$ is uniformly continuous.
+\end{exer}
+
+\begin{defn}
+We say that a sequence of functions $f_{n} : [0,1] \to \mathbb{R}, n \in \mathbb{N}$ converges uniformly to $f : [0,1] \to \mathbb{R}$ if for all $\varepsilon > 0$, there exists an $N$ so that for all $n \geq N$, $d(f_{n}, f) < \varepsilon$. (This is the metric $d$ from definition 2.1.)
+\end{defn}
+Note: our notation for uniform convergence will be $f_{n} \implies f$. 
+
+\begin{defn}
+We say that $f_{n} \rightarrow f$ ($f_{n}$ converges to $f$ pointwise) if for all $x$ in a given interval, $f_{n}(x) \rightarrow f(x)$.
+\end{defn}
+The difference between these notions of convergence was not always clearly understood. One should consider the following example to practice these ideas.
+
+Define $f_{n}(x) = x^{n}$ for $x \in [0,1]$. Then
+\[ \lim_{n \rightarrow \infty} f(x) =   \left\{
+\begin{array}{ll}
+      1 &  x \in [0,1) \\
+      0 &  x=1 .  \\
+\end{array} 
+\right. \]
+In other words, pointwise convergence gets us out of the space $C[0,1]$, motivating the following theorem, which should be proved as an exercise.
+
+\begin{thm}
+If $f_{n} \in C[0,1]$ and $f_{n} \implies f$, then $f \in C[0,1]$.
+\end{thm}
+
+\begin{exer}
+Find a sequence $(f_{n})$ of continuous functions in $C[0,1]$ that converge to $f \in C[0,1]$ pointwise, but NOT uniformly.
+\end{exer}
+(To learn more about this, look up \textit{Baire classes}.) This also motivates questions like: can a set of discontinuous points be uncountable? To begin answering this, consider the following function:
+
+\[ f(x) =   \left\{
+\begin{array}{ll}
+      1 &  x \notin \mathbb{Q} \\
+      0 &  x \in \mathbb{Q} .  \\
+\end{array} 
+\right. \]
+
+[THESE NOTES START ON WEDNESDAY JUNE 22]
+\begin{fact}[(Fejer)] 
+For all $c>0$ ($c \not\in \mathbb{N}$) $x_n = n^c \ \textrm{mod} 1$ is u.d. 
+\end{fact}
+
+It follows from the fact that $\sigma_{f,n} \implies f(x)$ for any continuous, $2\pi$-periodic function $f$ that for all $f\in \mathscr{C}_{[a,b]}$ and for all $\epsilon> 0$ there exists a trigonometric polynomial $T(x)$ such that 
+$$ \| f(x) - T(x) \| < \epsilon$$
+Note: We could replace $[a,b]$ in all of the above with $[0,1]$. 
+This is known as the trigonometric form of Weierstrass approximation theorem. 
+
+Recall last time: A sequence $(x_n)\subset [0,1]$ is u.d. in $[0,1]$ if and only if
+\begin{equation}
+    \frac1N\sum_{n=1}^N f(x_n) \to \int_0^1 f \text{for all} \ f\in \mathscr{C}_{[0,1]}
+\end{equation}
+if and only if
+\begin{equation}
+    \text{for all $h\in \mathbb{N}$} \ \frac1N\sum_{n=1}^N e^{2\pi i h x_n} \to 0 \ \text{as $n\to \infty$ } 
+\end{equation}
+Note the following subtlety: in the first, $f$ is not assumed to have $f(0)=f(1)$. But in the second statement the function $e^{2\pi i x}$ does satisfy this. 
+
+[INSERT GRAPHS OF FUNCTION]
+
+Consider the following function [graph of $-x$ for $-\pi < x < 0$ and $x$ for $0<x<\pi$. ]
+Let us calculate the $a_n$ and $b_n$'s of $f$. First note that all the $b_n$s are 0 since sine is odd and out function $f$ is even. 
+\begin{equation}
+    a_0 = \frac2\pi\int_0^\pi xdx =\left. \frac1\pi x^2\right|_0^\pi = \pi
+\end{equation}
+
+
+\begin{align} 
+   a_n & = \frac2\pi \int_0^\pi f(x) \cos n x dx = \frac 2\pi \int_0^\pi x\cos nx dx \\
+       & =  \left.\frac{2}{\pi}\frac{\cos n x}{n^2}\right|_0^\pi 
+         = \frac{2}\pi \frac{(-1)^n -1 }{n^2} 
+         = \begin{cases}
+           -1/\pi n^2 & n\ \text{odd}\\
+           0          & n\ \text{even}
+       \end{cases}
+\end{align}
+
+Thus, we see that the Fourier series for $|x|$ is given by 
+\begin{equation}
+    \frac\pi2 - \frac4\pi\sum_{n= 1,3,5,\dots} \frac{\cos nx}{n^2}
+\end{equation}
+
+Now for $x=0$ we get 
+\begin{equation}
+    \frac{\pi^2}8 = \sum_{n= 1,3,5,\dots} \frac 1 {n^2} 
+\end{equation}
+
+From here we deduce the solution to the Basel problem: 
+\begin{equation}
+    \sum_{n\geq 0} \frac1{n^2} = \frac{\pi^2}6
+\end{equation}
+
+Now we take $f(x) = x^2$ for $x\in[-\pi, \pi]$. We get 
+\begin{equation}
+    \frac12 a_0= \frac1\pi\int_0^\pi x^2 dx =\frac {\pi^2}{3}
+\end{equation} 
+Note: $f(x)$ is even again so all the $b_n=0$. 
+\begin{equation}
+    a_n = \cdots = (-1)^n \frac4{n^2}, \quad n>0$.
+\end{equation} 
+Thus 
+\begin{equation}
+
+\end{equation} 
+\end{document}
