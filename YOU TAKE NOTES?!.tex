@@ -1,0 +1,483 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{latexsym}
+\usepackage{units}
+\usepackage{bbm}
+\usepackage{ amssymb }
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{lem}{Lemma}[section]
+\newtheorem{cor}{Corollary}[section]
+\newtheorem{conj}{Conjecture}[section]
+\newtheorem{exer}{Exercise}[section]
+\newtheorem{fact}{Fact}[section]
+\newtheorem{chal}{Challenge}[section]
+
+\title{Fourier and Hilbert}
+\author{Lecturer: Dr. Bergelson \\
+Notes by: Fil and George}
+\date{Ross Program, Summer 2016}
+
+\begin{document}
+
+\maketitle
+
+\section{Intro to Fourier}
+
+Joseph Fourier lived from 1768 to 1830. One of his most well known achievements was uncovering the parabolic PDE 
+\begin{equation}
+    u_{t} = ku_{xx},
+\end{equation}
+where $k>0$ is a physical constant, and the boundary conditions $u(x,0) = f(x)$ and $u(0,t) = u(\pi, t) = 0$, where $\pi$ is the length of the region being analyzed. This is called the \textit{heat equation}, because it describes heat distribution in a given region over time.
+
+Fourier also discovered the solution set
+\begin{equation}
+    u(x,t) = \sum_{n=1}^{\infty} c_{n} e^{-kn^{2}t}\sin(nx),
+\end{equation}
+where we are searching for "Fourier coefficients" $c_{n}$ so that 
+\begin{equation}
+u(x,0) = \sum_{n=1}^{\infty} c_{n}\sin(nx) = f(x).
+\end{equation}
+The $c_{m}$ are calculated as such:
+\begin{equation}
+c_{m} = \frac{2}{\pi} \int_{0}^{2\pi} f(x)\sin(nx) dx.
+\end{equation}
+
+According to Fourier, "any arbitrary" $f(x)$ has the representation 
+\begin{equation}
+f(x) = \frac{a_{0}}{2} + a_{1}\cos(x) + b_{1}\sin(x) + \ldots + a_{k}\cos(kx) + b_{k}\sin(kx) + \ldots ,
+\end{equation}
+where 
+\begin{equation}
+a_{n} = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x)\cos(nx) dx
+\end{equation}
+and
+\begin{equation}
+b_{n} = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x)\sin(nx) dx.
+\end{equation}
+This is a revolutionary concept which paved the way for more advanced techniques in PDE. However, our focus will be on how it laid foundations for functional analysis, which, simply put, is linear algebra done on infinite dimensional vector spaces. Our objective will be to formulate a basic knowledge of functional analysis using \textit{Hilbert spaces}. With this, we will be able to tackle interesting problems, including the ones which follow...
+
+\section{Problems}
+
+The most immediate applications of Fourier's expansion might be to problems concerning infinite series. For example, we will look at:
+\begin{equation}
+\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}
+\end{equation}
+and
+\begin{equation}
+\sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n^2} = \frac{\pi^2}{12}.
+\end{equation}
+
+We will also investigate the \textit{Leibnitz formula}:
+\begin{equation}
+\frac{\pi}{4} = 1 - \frac{1}{3} + \frac{1}{5} - \frac{1}{7} + \frac{1}{9} - \ldots
+.\end{equation}
+The above should be solved as an exercise using a well known Taylor expansion. Additionally, we will see how Fourier provided the \textit{Generalized Leibnitz formula}:
+\begin{equation}
+\frac{\pi}{4} = \cos(y) - \frac{1}{3}\cos(3y) + \frac{1}{5}\cos(5y) - \frac{1}{7}\cos(7y) + \ldots,
+\end{equation}
+which converges for all $y \in (\frac{-\pi}{2}, \frac{\pi}{2}).$
+
+Before we state and discuss the \textit{Weierstrass Approximation theorem}, we must first introduce a definition.
+\begin{defn} Given that $f,g \in C[0,1]$, the set of continuous functions on the interval $[0,1]$, the metric we use is 
+\begin{align}
+    d(f,g) := \max_{x \in [0.1]} \vert f(x) - g(x) \vert .
+\end{align}
+\end{defn}
+
+The following exercise are meant to bolster an understanding of this concept before we move onto the theorem. 
+
+\begin{exer}
+
+$d(f,g) = 0$ if and only if $f=g$.
+
+$d(f_{1}, f_{3}) \leq d(f_{1}, f_{2}) + d(f_{2}, f_{3})$, $f_{i} \in C[0,1]$. (This is the \textit{triangle inequality}.)
+
+\end{exer}
+
+\begin{thm}
+Let $f : [0,1] \to \mathbb{R}$ be a continuous function on $[0,1].$ Then for all $\varepsilon > 0$, there exists a polynomial $p(x) \in \mathbb{R}[x]$ so that 
+$$
+d(f,p) < \varepsilon.
+$$
+\end{thm}
+
+This is one of the most famous theorems proven by Weierstrass, and is very similar to the important idea that $\mathbb{Q}$ is dense in $\mathbb{R}$. Indeed, a shorthand way of stating the theorem would be that polynomials are dense in $C[0,1]$. The following notable corollary sets a trend for a pattern we must keep an eye out for throughout our study of Hilbert spaces.
+\begin{cor}
+There exists a countable dense set in $C[0,1]$.
+\end{cor}
+
+For an even more interesting case, consider polynomials with a preselected set of powers of $x$. Let's call this set $\{x^{n_{i}} \}$. This is a central concept in the \textit{M\"{u}ntz-Sz\'{a}sz theorem}:
+
+\begin{thm}
+The Weierstrass approximation theorem holds for $\{x^{n_{i}} \}$ if and only if  $$\sum_{n=1}^{\infty} \frac{1}{n_{i}}$$ diverges.
+\end{thm}
+
+Our techniques from Fourier and Hilbert will also be applied to the interesting and ancient \textit{Dido's problem}: What is the maximal area inside a closed continuous curve of length $L$? The simplicity of the statement of the problem makes it so appetizing, and the fact that we could use techniques from Fourier series to solve it is indeed incredible. But before we jump into the problems listed above, we will need to dust off some concepts, while adding new ones and taking down a few problems along the way...
+
+\section{Convergence, Continuity and Cardinality}
+
+\begin{exer} Prove that these series converge:
+$$\sum_{n=2}^{\infty} \frac{\sin nx}{\log n} \qquad \sum_{n=2}^{\infty} \frac{\cos nx}{\log n}$$
+\end{exer}
+(Also, note that one is a Fourier series and the other is not! Can you tell which one is which?)
+
+After practicing with a few infinite series, consider the following theorem of Riemann as an exercise. First, it is important to note that by a \textit{rearrangement} of a sequence $a_{n}$, we mean a bijection from it to itself.
+\pagebreak
+
+\begin{thm}
+If $\sum a_{n}$ is a conditionally convergent series, then for all $x \in \mathbb{R} \cup \{ -\infty, \infty \}$, there exists a rearrangement of $a_{n}$, call it $b_{n}$, such that $$\sum_{n=1}^{\infty} b_{n} = x.$$
+\end{thm}
+
+Does this work in $\mathbb{R}^d$? Think about the definition of conditionally convergent in the more general case, and see if this theorem can be generalized, too. 
+
+Recall the Fourier expansion
+\begin{equation}
+    f(x) ~ \frac{a_{0}}{2} + \sum_{n=1}^{\infty} (a_{n}\cos nx + b_{n}\sin nx) =: F_{f}(x).
+\end{equation}
+Then there are continuous functions $f$ such that $F_{f}(x)$ is not convergent for many $x$ (try to verify this). 
+
+\begin{exer}
+Any continuous function $f$ on a closed, bounded interval in $\mathbb{R}$ is uniformly continuous.
+\end{exer}
+
+\begin{defn}
+We say that a sequence of functions $f_{n} : [0,1] \to \mathbb{R}, n \in \mathbb{N}$ converges uniformly to $f : [0,1] \to \mathbb{R}$ if for all $\varepsilon > 0$, there exists an $N$ so that for all $n \geq N$, $d(f_{n}, f) < \varepsilon$. (This is the metric $d$ from definition 2.1.)
+\end{defn}
+Note: our notation for uniform convergence will be $f_{n} \implies f$. 
+
+\begin{defn}
+We say that $f_{n} \rightarrow f$ ($f_{n}$ converges to $f$ pointwise) if for all $x$ in a given interval, $f_{n}(x) \rightarrow f(x)$.
+\end{defn}
+The difference between these notions of convergence was not always clearly understood. One should consider the following example to practice these ideas.
+
+Define $f_{n}(x) = x^{n}$ for $x \in [0,1]$. Then
+\[ \lim_{n \rightarrow \infty} f(x) =   \left\{
+\begin{array}{ll}
+      1 &  x \in [0,1) \\
+      0 &  x=1 .  \\
+\end{array} 
+\right. \]
+In other words, pointwise convergence gets us out of the space $C[0,1]$, motivating the following theorem, which should be proved as an exercise.
+
+\begin{thm}
+If $f_{n} \in C[0,1]$ and $f_{n} \implies f$, then $f \in C[0,1]$.
+\end{thm}
+
+\begin{exer}
+Find a sequence $(f_{n})$ of continuous functions in $C[0,1]$ that converge to $f \in C[0,1]$ pointwise, but NOT uniformly.
+\end{exer}
+(To learn more about this, look up \textit{Baire classes}.) This also motivates questions like: can a set of discontinuous points be uncountable? To begin answering this, consider the \textit{Dirichlet function}:
+
+\[ f(x) =   \left\{
+\begin{array}{ll}
+      1 &  x \notin \mathbb{Q} \\
+      0 &  x \in \mathbb{Q} .  \\
+\end{array} 
+\right. \]
+
+An interesting set we want to keep in mind in these contexts is the \textit{Cantor set}, which comes in two types: \\
+(1) the classical "middle thirds" Cantor set \\
+(2) any set homeomorphic to (1).
+
+Recall that two metric spaces $(X, d_{1})$ and $(Y, d_{2})$ are \textit{homeomorphic} if there exists a continuous bijection $\varphi : X \to Y$ between them. A very significant homeomorphism that the reader should look up is the \textit{sterographic projection}, which maps a punctured sphere onto the plane. Prove as an exercise that this is a \textit{conformal} (angle-preserving) \textit{mapping}.
+
+Now let's take a look at the \textit{middle thirds construction} of the Cantor set: Take the interval $[0,1]$ and remove $(1/3, 2/3)$ to get $K_{1} = [0, 1/3] \cup [2/3, 1]$. Remove the middle thirds from the two sets in this union to get $K_{2}$. Continue this procedure for all $K_{i}$, and then the Cantor set is
+\begin{equation}
+C := \bigcap_{i=1}^{\infty} K_{i}.
+\end{equation}
+Intuition says that this is non-empty because $0$ and $1$ are clearly in this intersection. Similarly, it is simple to see that the endpoints of the closed intervals are there, too. However, other points are in the set that may not be as easy to see. Indeed, $C$, $\mathbb{R}$, and $[0,1]$ are \textit{equicardinal} sets (this can be proven as an exercise). Note that the set $\{ {0,1} \}^{\mathbb{N}} $, all $0-1$ sequences, also has this cardinality. Another important (and equivalent!) definition of the Cantor set is:
+$$C := \big\{ t \in [0,1] : t = \sum_{k=1}^{\infty} \frac{t_{n}}{3^{n}}, t_{n} \in \{0,2\} \big\}.$$
+Interestingly enough, Cantor was motivated by Fourier series to construct this famous set, which is uncountable, but has \textit{measure zero} (we'll get to that soon). Because of these unique features, it harbors a large supply of fun exercises!
+
+\begin{exer}
+Prove that: \\
+(i) C is a closed subset of $\mathbb{R}$. \\
+(ii) C has no isolated points. \\
+(iii) C is uncountable. \\
+(iv) C is totally disconnected. 
+\end{exer}
+
+(If you're not sure what these words mean, most good books on analysis and topology will help you along.)
+
+\begin{exer}
+Find a sequence $(f_{n}) \subset C[0,1]$ so that $f_{n}(x) \rightarrow \mathbbm{1}_{C}$. Then prove that the set of discontinuous points of $\mathbbm{1}_{C}$ is $C$ itself.
+\end{exer}
+
+\begin{chal}
+$\{ {0,1} \}^{\mathbb{N}}$ is a Cantor set.
+\end{chal}
+
+To begin our study of \textit{Fejer's Theorem (1900)}, we must first look at the following definition:
+\begin{defn}
+Let $$S_{n} = \frac{a_{0}}{2} + \sum_{j=1}^{n} (a_{j} \cos jx + b_{j} \sin jx)$$ be the $n^{th}$ partial sum of the Fourier expansion of $f$.  Then the $N^{th}$ Ces\'{a}ro average of $S_{n}$ is 
+$$\sigma_{N} = \frac{1}{N} \sum_{n=0}^{N-1} S_{n}(x).$$
+\end{defn}
+
+The miraculous result of Fejer's theorem is that by making use of the Ces\'{a}ro averages, it is able to recover the original function $f$.  The statement is as follows:
+\begin{thm}
+If $f \in C[-\pi, \pi]$ is $2\pi$-periodic, then 
+$$ \sigma_{N}(x) \implies f(x).$$
+\end{thm}
+
+Before we prove this theorem, we must first present two little lemmas that will be left as exercises:
+\begin{lem}
+\begin{equation}
+\frac{1}{2} + \cos u + \cos 2u + \ldots + \cos ku = \frac{\sin (\frac{2k+1}{2} u)}{2\sin \frac{u}{2}}
+\end{equation}
+\end{lem}
+\begin{lem}
+\begin{equation}
+\sum_{k=0}^{n-1} \sin (2k+1)z = \frac{\sin^{2}nz}{\sin z} 
+\end{equation}
+\end{lem}
+(Hint: $e^{ix} = \cos x + i \sin x$ makes this much quicker.)
+
+With this, we can now prove Fejer's theorem.
+\begin{proof}
+Recalling $S_n$ from definition 3.3, the sum becomes
+$$\frac{a_{0}}{2} + \sum_{j=1}^{k} (a_{j}\cos jx + b_{j}\sin jx) = \frac{1}{\pi} \int_{-\pi}^{\pi} f(t)\{\frac{1}{2} + \sum_{j=1}^{k} (\cos jt\cos jx + \sin jt\sin jx)\} dt.$$
+
+By lemma 3.1, this then simplifies to 
+\begin{equation}
+\frac{1}{\pi} \int_{-\pi}^{\pi} f(t) \frac{ \sin \{\frac{2k+1}{2}(t-x)\}}{2\sin\frac{t-x}{2}}dt = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x+z) \frac{ \sin \{\frac{2k+1}{2}z\}}{2\sin\frac{z}{2}}dz.
+\end{equation}
+
+Note that we don't have to change the bounds because $f$ is $2\pi$-periodic on this interval. Substituting (17) into the Ces\'{a}ro average, we get:
+\begin{align}
+\sigma_{n}(x) &= \frac{1}{2n\pi} \int_{-\pi}^{\pi} \sum_{k=0}^{n-1} \Big( \frac{ \sin \{\frac{2k+1}{2}z\}}{2\sin\frac{z}{2}} \Big)f(x+z)dz \\
+&= \frac{1}{2n\pi} \int_{-\pi}^{\pi} \Big( \frac{ \sin \{\frac{nz}{2}\}}{\sin\frac{z}{2}} \Big)^{2}f(x+z)dz.
+\end{align}
+
+
+The next step is to consider the \textit{Fejer kernel},
+\begin{equation}
+\Phi_{n}(z) := \frac{1}{2n\pi}\Big( \frac{ \sin \{\frac{nz}{2}\}}{\sin\frac{z}{2}} \Big)^{2},
+\end{equation}
+which exhibits the following properties:
+$$
+\text{(1)}\; \Phi_{n}(z) \geq 0
+$$
+$$
+\text{(2)}\; \int_{-\pi}^{\pi} \Phi_{n}(z)dz = 1
+$$
+and for all $\delta > 0$ and $n \in \mathbb{N}$, where $0 < \delta < x < \pi$
+$$
+\text{(3)}\; \int_{-\pi}^{-\delta} \Phi_{n}(z)dz = \int_{\delta}^{\pi} \Phi_{n}(z)dz =: \eta_{n}(\delta) \to 0
+$$
+as $n \to \infty$. Implementing this, we get:
+\begin{align*}
+\sigma_{n}(x) &= \int_{-\pi}^{-\delta} \Phi_{n}(z)f(x+z)dz + \int_{-\delta}^{\delta} \Phi_{n}(z)f(x+z)dz + \int_{\delta}^{\pi} \Phi_{n}(z)f(x+z)dz.
+\end{align*}
+
+Next, note that our assumptions imply that there exists an $M \in \mathbb{R}$ such that $\vert f(x) \vert < M$ for all $x \in \mathbb{R}$. In addition, for all $\varepsilon > 0$, there exists a $\delta > 0$ such that $\vert x'' - x' \vert < \delta$ implies that $\vert f(x'') - f(x') \vert < \varepsilon$. Then:
+
+\begin{align}
+f(x) - \sigma_{n}(x) 
+	&= \int_{-\pi}^{\pi} (f(x) - f(x+z))\Phi_{n}(z)dz \\ 
+	&= \left(\int_{-\pi}^{-\delta} 
+	+ \int_{-\delta}^{\delta} 
+	+ \int_{\delta}^{\pi}\right) (f(x) - f(x+z))\Phi_{n}(z)dz \\
+	&=: J_{-} + J_{0} + J_{+}.
+\end{align}
+
+Observe that $\vert J_{-} \vert \leq 2M\eta_{n}(\delta)$, $\vert J_{+} \vert \leq 2M\eta_{n}(\delta)$, and 
+$$
+\vert J_{0} \vert \leq \frac{\varepsilon}{2} \int_{-\delta}^{\delta} \Phi_{n}(z)dz < \frac{\varepsilon}{2}.
+$$
+
+Now, let $n_{0} \in \mathbb{N}$ be so that for all $n \geq n_{0}$, $2M\eta_{n}(\delta) < \frac{\varepsilon}{4}$. So then for all $n \geq n_{0}$, 
+$$
+\vert f(x) - \sigma_{n}(x) \vert <  \frac{\varepsilon}{4} + \frac{\varepsilon}{2} + \frac{\varepsilon}{4} = \varepsilon.
+$$ 
+This is the desired result.
+\end{proof}
+
+
+Applications of this theorem include the Weierstrass approximation theorem for trigonometric polynomials. In fact, it follows immediately as a corollary. Additional aspects of the usefulness of this theorem will become apparent when we learn more about \textit{uniform distribution}.
+
+\begin{defn}
+A sequence $(x_{n}) \subset [0.1]$ is uniformly distributed (u.d.) if for all $0 \leq a < b \leq 1$,
+$$
+\lim_{N \to \infty} \frac{\vert\{ 1 \leq n \leq N : x_{n} \in (a,b) \} \vert}{N} = b-a.
+$$
+\end{defn}
+
+This motivates the following theorem and exercise:
+\begin{thm}
+$(x_{n}) \subset [0,1]$ is u.d. if and only if for all $f \in C[0,1]$,
+$$
+\lim_{N \to \infty} \frac{1}{N} \sum_{n=1}^{N} f(x_{n}) = \int_{0}^{1}fdx
+$$
+if and only if for all $h \in \mathbb{N}$,
+$$
+\lim_{N \to \infty} \frac{1}{N} \sum_{n=1}^{N} e^{2\pi i h x_n} = 0.
+$$
+\end{thm}
+
+\begin{exer}
+$\forall c > 0, c \notin \mathbb{N}, x_{n} = n^{c}\mod 1$ is u.d.
+\end{exer}
+
+However, with Fejer's theorem fully justified, we will look at some simpler applications first. Take, for example, the function $f(x) = \vert x \vert$ on the interval $[-\pi,\pi]$, and assume that the Fourier series converges here. Recall the Fourier coefficients $a_{n}$ and $b_{m}$. All of the $b_{m}$ will be zero (if you're not convinced, prove it as an exercise!). Some calculations give us:
+$$
+a_{0} = \frac{2}{\pi} \int_{0}^{\pi}xdx = \pi
+$$
+and
+\begin{align*}
+a_{n} &= \frac{2}{\pi} \int_{0}^{\pi} x\cos nxdx = \frac{2}{\pi} \Big[\frac{\cos nx}{n^2}\Big]_{0}^{\pi} = \frac{2}{\pi} \frac{(-1)^{n}-1}{n^2}.
+\end{align*}
+This leads us to the expression
+$$
+f(x) = \frac{\pi}{2} - \frac{4}{\pi}\sum_{n=1,3,5,\ldots} \frac{\cos nx}{n^2},
+$$
+and evaluating at $x=0$ results in
+$$
+\frac{\pi^2}{8} = \sum_{n=1,3,5,\ldots}\frac{1}{n^2}.
+$$
+\begin{exer}
+Using the above, solve the Basel Problem:
+$$
+\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}.
+$$
+\end{exer}
+
+\begin{exer}
+By a similar procedure, and on the same interval, show that
+$$
+f(x) = x^{2} = \frac{\pi^2}{3} + 4\sum_{n=1}^{\infty} \frac{(-1)^{n}\cos nx}{n^2}
+$$
+and so
+$$
+\sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n^2} = \frac{\pi^2}{12}.
+$$
+\end{exer}
+
+Recall that
+\begin{align}
+S_{n}(x) &= \frac{a_0}{2} + \sum_{k=1}^{n}(a_{k}\cos kx + b_{k}\sin kx) \\
+	&= \frac{1}{\pi} \int_{-\pi}^{\pi}f(t) \big( \frac{1}{2} + \sum_{k=1}^{n}\cos k(t-x) \big) dt.
+\end{align}
+
+\begin{fact}
+If $f$ is differentiable and $2\pi$-periodic, then $S_{n}(x) \to f(x)$ for all $x$.
+\end{fact}
+
+Let's define the \textit{Dirichlet kernel}:
+\begin{defn}
+$$
+D_{n}(z) :=\frac{1}{2\pi} \frac{\sin \big(\frac{2n+1}{2}z \big)}{sin(\frac{z}{2})}
+$$
+As for $\Phi_{n},$ 
+$$
+\int_{-\pi}^{\pi} D_{n}(z)dz =1.
+$$
+\end{defn}
+This gives us
+\begin{align}
+S_{n}(x) - f(x) &= \frac{1}{2\pi} \int_{-\pi}^{\pi} [f(x+z)-f(x)] \frac{\sin \big(\frac{2n+1}{2}z \big)}{sin(\frac{z}{2})}dz \\
+		     &= \frac{1}{2\pi} \int_{-\pi}^{\pi} \Big[\frac{f(x+z)-f(x)}{z}\Big] \frac{z}{sin(\frac{z}{2})}\sin \big(\frac{2n+1}{2}z \big)dz.
+\end{align}
+Ponder: why did we write it this way? The suspense builds. Before we continue, solve this clever little problem, the \textit{Riemann-Lebesgue Lemma}:
+
+\begin{exer}
+If $\varphi(x)$ is integrable on $[a,b]$, then
+$$
+\lim_{n \to \infty} \int _{a}^{b} \varphi(x)\sin nxdx = 0.
+$$
+\end{exer}
+
+This can be proven with Riemann integration, and for those of you who know more words, with Lebesgue integration.
+
+
+\begin{thm}
+Assume that $f$ is Riemann integrable on $[-\pi,\pi]$ and also that for any fixed $x \in [-\pi,\pi]$ and $\delta>0$,
+\begin{equation}
+\int_{-\delta}^{\delta} \Big| \frac{f(x+t) -f(x)}{t} \Big| dt
+\end{equation}
+exists. Then for this $x$,
+$$
+\lim_{n \to \infty} S_{n}(x) = f(x).
+$$
+\end{thm}
+
+A modification of the condition in (28) is as follows:
+$$
+\text{(a)} \quad \int_{0}^{\delta}  \frac{f(x+z) -f(x+0)}{z}  dz
+$$
+exists and
+$$
+\text{(b)} \quad  \int_{-\delta}^{0}  \frac{f(x+z) -f(x-0)}{z}  dz.
+$$
+
+Here, the notation $f(x+0)$ means that we are taking the limit from the right, and $f(x-0)$ is from the left. Just assuming (a) and (b) is sufficient to imply the conclusion of theorem 3.5. As a refresher, remember that a \textit{discontinuity of the first kind}, or \textit{jump discontinuity},  occurs when the function's limits from the left and right are not equal or are $\pm \infty$. And so we have a theorem of Dirichlet:
+
+\begin{thm}
+Let $f$ be a bounded function, with discontinuities of the first kind only, and assume that every point of $f$ has left and right derivatives. Then:
+
+\[ \lim_{n \to \infty} S_{n}(x) =   \left\{
+\begin{array}{ll}
+      f(x) &  \text{x is a point of continuity} \\
+      \\
+      \frac{f(x-0)+f(x+0)}{2} &  \text{x is a point of discontinuity.}  \\
+\end{array} 
+\right. \]
+\end{thm}
+For most applications, we assume that $f$ has only finitely many points of discontinuity of the first kind.
+
+Recalling theorem 3.1, we now formulate a generalization, due to Levy and Steinitz. The proof should first be attempted in $\mathbb{C}$, for simplicity and to build intuition.
+\begin{thm}
+If 
+$$\sum_{n=1}^{\infty} v_{n}$$
+is a conditionally convergent series, where $v_{n} \in \mathbb{R}^{d}$, then all possible rearrangements of the $v_{n}$ fill an affine subspace in $\mathbb{R}^d$.
+\end{thm}
+
+We must consider some various modes of convergence to continue our study in different spaces.
+
+\begin{defn}
+$$
+F(x) := \lim_{N \to \infty} \sum_{n=1}^{N} f_{n}(x)
+$$
+\end{defn}
+
+\begin{exer}
+Let $f_{n} \in C[0,1]$. Then even if $F(x)$ exists for all $x \in [0,1]$, it may not necessarily be continuous.
+\end{exer}
+
+\begin{defn}
+$$
+\sum_{n=1}^{\infty} f_{n} \implies F(x)
+$$
+is equivalent to $\forall \varepsilon >0$, there is an $N_{0} \in \mathbb{N}$ such that for all $N > N_{0}$,
+$$
+\max_{x \in [a,b]} \Big\vert \sum_{n=1}^{N} f_{n}(x) - F(x) \Big\vert < \varepsilon.
+$$
+\end{defn}
+This is uniform convergence for series.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
